@@ -231,26 +231,18 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 * _component_ values, or `undefined` if no such _id_ exists.
 	 */
 	find(predicate: (entity: Handle, ...componentValues: InferValues<Cs>) => boolean): QueryResult<Cs> | undefined {
-		const filters = this.filters as unknown as ((e: Handle, ...args: unknown[]) => boolean)[]
 		const pred = predicate as unknown as (e: Handle, ...args: unknown[]) => boolean
-		const hasFilters = filters.size() > 0
 
 		if (this.includedIds.size() === 0) {
-			world.entity_index.dense_array.forEach((rawId) => {
+			for (const rawId of world.entity_index.dense_array) {
 				const id = resolveId(rawId)
-				// Same as in `forEach`, we need to skip unsupported standard entities.
-				if (!id) {
-					return
-				}
-
-				if (hasFilters && !this.useFilters(id)) {
-					return
-				}
+				if (!id) continue
+				if (!this.useFilters(id)) continue
 
 				if (pred(id)) {
 					return [id] as unknown as QueryResult<Cs>
 				}
-			})
+			}
 
 			return undefined
 		}
@@ -260,7 +252,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 		for (const [rawId, v1, v2, v3, v4, v5, v6, v7, v8] of rawQuery.without(...this.excludedIds)) {
 			const id = resolveId(rawId)!
 
-			if (hasFilters && !this.useFilters(id, v1, v2, v3, v4, v5, v6, v7, v8)) {
+			if (!this.useFilters(id, v1, v2, v3, v4, v5, v6, v7, v8)) {
 				continue
 			}
 
