@@ -162,10 +162,9 @@ export abstract class Handle {
 	get<Args extends OneUpToFour<ComponentHandle | Pair>>(
 		...componentsOrPairs: Args
 	): Flatten<Nullable<InferValues<Args>>> {
-		return world.get(
-			this.id,
-			...(componentsOrPairs.map((c) => c.id) as OneUpToFour<RawId>),
-		) as Flatten<Nullable<InferValues<Args>>>
+		return world.get(this.id, ...(componentsOrPairs.map((c) => c.id) as OneUpToFour<RawId>)) as Flatten<
+			Nullable<InferValues<Args>>
+		>
 	}
 
 	/**
@@ -227,9 +226,9 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Gets the label assigned to this _id_.
+	 * Gets the label assigned to this entity.
 	 */
-	label(): string {
+	toString(): string {
 		return this.get(Label)!
 	}
 

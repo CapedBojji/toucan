@@ -72,11 +72,11 @@ function validatePluginConflict(
 	}
 
 	const existingSource = isExistingExternal
-		? `external plugin '${existingParent!.label() ?? 'Unknown'}'`
+		? `external plugin '${existingParent}'`
 		: 'user code'
 
 	const incomingSource = isIncomingExternal
-		? `external plugin '${incomingParent!.label() ?? 'Unknown'}'`
+		? `external plugin '${incomingParent}'`
 		: 'user code'
 
 	const fix = isExistingExternal
@@ -248,7 +248,7 @@ export class Scheduler {
 				.filter((_, system) => !system.scheduled)
 				.forEach((e, system) => {
 					const wrappedCallback = () => {
-						debug.profilebegin(e.label())
+						debug.profilebegin(e.toString())
 						const t = os.clock()
 
 						system.callback(...system.args)
