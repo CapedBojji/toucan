@@ -228,7 +228,7 @@ export class Scheduler {
 			.insert(PRE_SIMULATION, RunService, 'PreSimulation')
 			.insert(POST_SIMULATION, RunService, 'PostSimulation')
 
-		const buildPlugins = () => {
+		function buildPlugins(scheduler: Scheduler) {
 			query(Plugin)
 				.collect()
 				.filter(([, p]) => !p.built)
@@ -239,7 +239,7 @@ export class Scheduler {
 				})
 				.forEach(([, p]) => {
 					p.built = true
-					p.build(this, ...p.args)
+					p.build(scheduler, ...p.args)
 				})
 		}
 
@@ -263,7 +263,7 @@ export class Scheduler {
 		}
 
 		// TODO! Consider if we should guarantee plugin building before system scheduling.
-		this.useSystem(buildPlugins, ABSOLUTE_FIRST)
+		this.useSystem(buildPlugins, ABSOLUTE_FIRST, this)
 		this.useSystem(scheduleSystems, ABSOLUTE_FIRST)
 
 		STANDARD_PLUGINS.forEach((plugin) => this.usePlugin(plugin))
