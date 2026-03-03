@@ -634,8 +634,6 @@ ChildOf.set(Internal)
  */
 export const Resource = component('Resource')
 
-// TODO! Consider removing anything `args` related, as resources will
-// ! suffice when they're implemented like Bevy's resources.
 /**
  * Built-in component used to represent systems.
  */
