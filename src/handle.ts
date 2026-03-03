@@ -57,7 +57,6 @@ function isExternal(): boolean {
 // Handle
 // -----------------------------------------------------------------------------
 
-// TODO! Handles should have an equality metamethod that compares their IDs.
 export abstract class Handle {
 	constructor(
 		/**
@@ -71,7 +70,10 @@ export abstract class Handle {
 		 * `resolveId` function.
 		 */
 		public readonly id: RawId,
-	) {}
+	) {
+		const mt = getmetatable(this) as { __eq?: (a: Handle, b: Handle) => boolean }
+		mt.__eq = (a, b) => a.id === b.id
+	}
 
 	/**
 	 * Assigns a _tag component_ to this _id_.
