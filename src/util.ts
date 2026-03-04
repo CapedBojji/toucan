@@ -4,7 +4,8 @@ export type Nullable<T extends unknown[]> = { [K in keyof T]: T[K] | undefined }
 
 export type OneUpToFour<T> = [T] | [T, T] | [T, T, T] | [T, T, T, T]
 
-export type OneUpToEight<T> =
+export type ZeroUpToEight<T> =
+	| []
 	| [T]
 	| [T, T]
 	| [T, T, T]

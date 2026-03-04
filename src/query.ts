@@ -1,7 +1,7 @@
 import { Handle, RawId, InferValues, resolveId, ComponentHandle, component, Wildcard } from './handle'
 import { Pair } from './pair'
 import { System } from './scheduler'
-import { OneUpToEight } from './util'
+import { ZeroUpToEight } from './util'
 import { world } from './world'
 import * as jecs from '@rbxts/jecs'
 
@@ -362,6 +362,6 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
  *     })
  * }
  */
-export function query<Cs extends OneUpToEight<ComponentHandle | Pair>>(...components: Cs): Query<Cs> {
+export function query<Cs extends ZeroUpToEight<ComponentHandle | Pair>>(...components: Cs): Query<Cs> {
 	return new Query<Cs>(...components)
 }
