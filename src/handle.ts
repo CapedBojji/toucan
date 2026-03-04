@@ -21,9 +21,7 @@ export type InferValue<T> = T extends { [VALUE_SYMBOL]: infer V } ? V : never
 export type InferValues<Ts> = { [K in keyof Ts]: InferValue<Ts[K]> }
 
 /**
- * Returns the appropriate handle for `rawId`, or `undefined` if `rawId` does not
- * exist in the world or is invalid (does not reference an _entity_, _component_
- * or _resource_).
+ * Returns the appropriate handle for `rawId`, or `undefined` if it does not exist in the world.
  */
 export function resolveId(rawId: RawId): EntityHandle | ComponentHandle | ResourceHandle | undefined {
 	if (!world.contains(rawId)) {
