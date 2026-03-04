@@ -11,12 +11,13 @@ export const Previous = component('Previous')
 export const Observed = component('Observed')
 
 export class Query<Cs extends (ComponentHandle | Pair)[]> {
+	private readonly requiredIds: RawId[]
 	private readonly includedIds: RawId[] = []
 	private readonly excludedIds: RawId[] = []
 	private readonly filters: ((entity: Handle, ...components: InferValues<Cs>) => boolean)[] = []
 
 	constructor(...components: Cs) {
-		this.includedIds = components.map((c) => c.id)
+		this.requiredIds = components.map((c) => c.id)
 	}
 
 	/**
@@ -80,7 +81,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 */
 	added<C extends ComponentHandle>(component: C): Query<[...Cs, C]> {
 		const prevPair = jecs.pair(Previous.id, component.id)
-		this.includedIds.push(component.id)
+		this.requiredIds.push(component.id)
 		this.excludedIds.push(prevPair as unknown as RawId)
 
 		component.set(Observed)
@@ -105,7 +106,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 */
 	removed<C extends ComponentHandle>(component: C): Query<[...Cs, C]> {
 		const prevPair = jecs.pair(Previous.id, component.id)
-		this.includedIds.push(prevPair as unknown as RawId)
+		this.requiredIds.push(prevPair as unknown as RawId)
 		this.excludedIds.push(component.id)
 
 		component.set(Observed)
@@ -129,12 +130,12 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 */
 	changed<C extends ComponentHandle>(component: C): Query<[...Cs, C, C]> {
 		// Indices where these values will appear in the arguments list.
-		const newIndex = this.includedIds.size()
+		const newIndex = this.requiredIds.size()
 		const oldIndex = newIndex + 1
 
 		const prevPair = jecs.pair(Previous.id, component.id)
-		this.includedIds.push(component.id)
-		this.includedIds.push(prevPair as unknown as RawId)
+		this.requiredIds.push(component.id)
+		this.requiredIds.push(prevPair as unknown as RawId)
 
 		component.set(Observed)
 
@@ -297,8 +298,9 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 			v8?: unknown,
 		) => boolean | void,
 	): void {
+		// TODO! Optimize this by adding a flag when we add Wildcard to the query.
 		// Wildcard queries are a special case where we want all entities.
-		if (this.includedIds.includes(Wildcard.id)) {
+		if (this.requiredIds.includes(Wildcard.id) || this.includedIds.includes(Wildcard.id)) {
 			for (const rawId of world.entity_index.dense_array) {
 				const id = resolveId(rawId)
 				if (!id || !this.useFilters(id)) continue
@@ -319,7 +321,10 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	}
 
 	private makeRawQuery(): jecs.Query<RawId[]> {
-		return world.query(...this.includedIds).without(...this.excludedIds)
+		return world
+			.query(...this.requiredIds)
+			.with(...this.includedIds)
+			.without(...this.excludedIds)
 	}
 
 	private useFilters(
