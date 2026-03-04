@@ -239,7 +239,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	}
 
 	/**
-	 * Converts the query into a system callback that can be scheduled.
+	 * Converts the query into a callback that can be scheduled just like a regular system function.
 	 *
 	 * # Pros
 	 *
@@ -249,9 +249,33 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 *
 	 * # Cons
 	 *
-	 * - Cannot be named, which can make debugging more difficult.
+	 * - If a label is desired, requires it being manually given in `Scheduler.useSystem()`.
+	 *
+	 * # Example
+	 *
+	 * ```ts
+	 * const greetPeople = query(Name, Person).bind((_e, name) => {
+	 *     print(`Hello, ${name}!`)
+	 * })
+	 *
+	 * scheduler()
+	 *     .useSystem(greetPeople, UPDATE, [], 'greetPeople')
+	 *     .run()
+	 *
+	 * // Equivalent to...
+	 *
+	 * function greetPeople() {
+	 *     query(Name, Person).forEach((_e, name) => {
+	 *         print(`Hello, ${name}!`)
+	 *     })
+	 * }
+	 *
+	 * scheduler()
+	 *     .useSystem(greetPeople, UPDATE)
+	 *     .run()
+	 * ```
 	 */
-	system(callback: (entity: Handle, ...componentValues: InferValues<Cs>) => void): System<[]> {
+	bind(callback: (entity: Handle, ...componentValues: InferValues<Cs>) => void): System<[]> {
 		this.rawQuery = this.rawQuery.cached() as unknown as jecs.Query<RawId[]>
 
 		return () => {
