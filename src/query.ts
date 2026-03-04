@@ -11,15 +11,12 @@ export const Previous = component('Previous')
 export const Observed = component('Observed')
 
 export class Query<Cs extends (ComponentHandle | Pair)[]> {
-	private rawQuery: jecs.Query<RawId[]>
 	private readonly includedIds: RawId[] = []
 	private readonly excludedIds: RawId[] = []
 	private readonly filters: ((entity: Handle, ...components: InferValues<Cs>) => boolean)[] = []
 
 	constructor(...components: Cs) {
-		const ids = components.map((c) => c.id)
-		this.rawQuery = world.query(...ids)
-		this.includedIds = ids
+		this.includedIds = components.map((c) => c.id)
 	}
 
 	/**
@@ -29,7 +26,6 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 */
 	with(...components: (ComponentHandle | Pair)[]): Query<Cs> {
 		components.forEach((c) => this.includedIds.push(c.id))
-		this.rawQuery = this.rawQuery.with(...components.map((c) => c.id))
 		return this
 	}
 
@@ -48,7 +44,6 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 */
 	without(...components: (ComponentHandle | Pair)[]): Query<Cs> {
 		components.forEach((c) => this.excludedIds.push(c.id))
-		this.rawQuery = this.rawQuery.without(...components.map((c) => c.id))
 		return this
 	}
 
@@ -87,7 +82,6 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 		const prevPair = jecs.pair(Previous.id, component.id)
 		this.includedIds.push(component.id)
 		this.excludedIds.push(prevPair as unknown as RawId)
-		this.rawQuery = this.rawQuery.with(component.id).without(prevPair)
 
 		component.set(Observed)
 
@@ -112,7 +106,6 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 		const prevPair = jecs.pair(Previous.id, component.id)
 		this.includedIds.push(prevPair as unknown as RawId)
 		this.excludedIds.push(component.id)
-		this.rawQuery = this.rawQuery.with(prevPair).without(component.id)
 
 		component.set(Observed)
 
@@ -141,7 +134,6 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 		const prevPair = jecs.pair(Previous.id, component.id)
 		this.includedIds.push(component.id)
 		this.includedIds.push(prevPair as unknown as RawId)
-		this.rawQuery = this.rawQuery.with(component.id, prevPair)
 
 		component.set(Observed)
 
@@ -161,7 +153,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	forEach(callback: (entity: Handle, ...componentValues: InferValues<Cs>) => void): void {
 		const fn = callback as unknown as (e: Handle, ...args: unknown[]) => void
 
-		this.iterate((e, v1, v2, v3, v4, v5, v6, v7, v8) => {
+		this.iterate(this.makeRawQuery(), (e, v1, v2, v3, v4, v5, v6, v7, v8) => {
 			fn(e, v1, v2, v3, v4, v5, v6, v7, v8)
 		})
 	}
@@ -176,7 +168,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 		const pred = predicate as unknown as (e: Handle, ...args: unknown[]) => boolean
 		let result: QueryResult<Cs> | undefined = undefined
 
-		this.iterate((e, v1, v2, v3, v4, v5, v6, v7, v8) => {
+		this.iterate(this.makeRawQuery(), (e, v1, v2, v3, v4, v5, v6, v7, v8) => {
 			if (pred(e, v1, v2, v3, v4, v5, v6, v7, v8)) {
 				result = [e, v1, v2, v3, v4, v5, v6, v7, v8] as unknown as QueryResult<Cs>
 				return true
@@ -276,10 +268,12 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 * ```
 	 */
 	bind(callback: (entity: Handle, ...componentValues: InferValues<Cs>) => void): System<[]> {
-		this.rawQuery = this.rawQuery.cached() as unknown as jecs.Query<RawId[]>
+		const fn = callback as unknown as (e: Handle, ...args: unknown[]) => void
 
 		return () => {
-			this.forEach(callback)
+			this.iterate(this.makeRawQuery().cached(), (e, v1, v2, v3, v4, v5, v6, v7, v8) => {
+				fn(e, v1, v2, v3, v4, v5, v6, v7, v8)
+			})
 		}
 	}
 
@@ -289,6 +283,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 * if `callback` returns `true`.
 	 */
 	private iterate(
+		rawQuery: jecs.Query<RawId[]> | jecs.CachedQuery<RawId[]>,
 		callback: (
 			id: Handle,
 			v1?: unknown,
@@ -314,12 +309,16 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 		}
 
 		// Roblox-TS won't allow spreading tuples from iterators, so we have to do it manually.
-		for (const [rawId, v1, v2, v3, v4, v5, v6, v7, v8] of this.rawQuery) {
+		for (const [rawId, v1, v2, v3, v4, v5, v6, v7, v8] of rawQuery) {
 			const id = resolveId(rawId)!
 			if (!this.useFilters(id, v1, v2, v3, v4, v5, v6, v7, v8)) continue
 
 			if (callback(id, v1, v2, v3, v4, v5, v6, v7, v8)) return
 		}
+	}
+
+	private makeRawQuery(): jecs.Query<RawId[]> {
+		return world.query(...this.includedIds).without(...this.excludedIds)
 	}
 
 	private useFilters(
