@@ -159,6 +159,9 @@ function spawnPlugin<Args extends defined[]>(build: Plugin<Args>, ...args: Args)
 	return handle
 }
 
+/**
+ * The starting point of a game made with Toucan.
+ */
 export class Scheduler {
 	/**
 	 * Schedules a system to run in the specified phase with the provided arguments.
@@ -288,7 +291,7 @@ export class Scheduler {
 }
 
 /**
- * The starting point of a game made with Toucan.
+ * Returns a new `Scheduler`, the starting point of a game made with Toucan.
  *
  * Responsible for running systems, building plugins and organizing phases.
  *
@@ -296,22 +299,20 @@ export class Scheduler {
  *
  * ```ts
  * const Person = component()
- * const Name = component<string>()
+ * const Age = component<number>()
  *
  * function spawnPeople() {
- *     entity().set(Person).set(Name, 'Alice')
- *     entity().set(Person).set(Name, 'Bob')
+ *     entity('Alice').set(Age, 25)
+ *     entity('Bob').set(Age, 30)
  * }
  *
- * function greet() {
- *     query(Name).forEach((_, name) => {
- *         print(`Hello, ${name}!`)
- *     })
- * }
+ * const greetPeople = query(Age).with(Person).bind((entity, age) => {
+ *     print(`Hello, ${entity}! I can magically sense that you're ${age} years old!`)
+ * })
  *
  * scheduler()
  *     .useSystem(spawnPeople, STARTUP)
- *     .useSystem(greet, UPDATE)
+ *     .useSystem(greetPeople, UPDATE)
  *     .run()
  * ```
  */
