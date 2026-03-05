@@ -91,16 +91,34 @@ function isExternal(): boolean {
 // Handle
 // -----------------------------------------------------------------------------
 
+/**
+ * The base class that represents any kind of entity, may it be a simple entity,
+ * a component, or any other variation.
+ *
+ * Although the type means Typescript doesn't know the exact entity variation,
+ * it is known at runtime. Because of this, one that knows the exact variation
+ * can simply type cast it, like so:
+ * ```ts
+ * const Person = component()
+ * const bob = entity().set(Person)
+ *
+ * query(Person).forEach((handle) => {
+ *     // We know for sure that we won't be giving the `Person` component to anything
+ *     // other than simple entities, so we can safely type cast it as one.
+ *     const entity = handle as EntityHandle
+ * })
+ * ```
+ */
 export abstract class Handle {
 	constructor(
 		/**
-		 * The raw Jecs ID underlying this handle.
+		 * The numeric ID underlying this handle.
 		 *
 		 * Meant to be used when one cannot use the higher-level abstractions
-		 * provided by Toucan, such as storing an _entity_'s raw ID in an
+		 * provided by Toucan, such as storing an entity's ID in an
 		 * instance's attribute, which cannot hold complex data structures.
 		 *
-		 * In order to get back the high-level handle from a raw ID, use the
+		 * In order to get back the high-level handle from an ID, use the
 		 * `resolveId` function.
 		 */
 		public readonly id: RawId,
@@ -110,19 +128,18 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Assigns a _tag component_ to this _id_.
+	 * Assigns a tag component to this entity.
 	 *
 	 * # Example
 	 *
 	 * ```ts
 	 * const IsAlive = component()
-	 *
 	 * myEntity.set(IsAlive)
 	 * ```
 	 */
 	set(tagComponent: ComponentHandle<undefined>): this
 	/**
-	 * Assigns a _component_ and its _value_ to this _id_.
+	 * Assigns a component and its value to this entity.
 	 *
 	 * # Example
 	 *
@@ -137,7 +154,7 @@ export abstract class Handle {
 	 */
 	set<V>(component: ComponentHandle<V>, value: NoInfer<V>): this
 	/**
-	 * Assigns a relationship _pair_ to this _id_.
+	 * Assigns a relationship pair to this entity.
 	 *
 	 * # Example
 	 *
@@ -151,7 +168,7 @@ export abstract class Handle {
 	 */
 	set(tagPair: Pair<undefined>): this
 	/**
-	 * Assigns a relationship _pair_ and its _value_ to this _id_.
+	 * Assigns a relationship pair and its value to this entity.
 	 *
 	 * # Example
 	 *
@@ -180,10 +197,10 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Retrieves the _values_ of up to 4 _components_ or relationship _pairs_ on
-	 * this _id_.
+	 * Retrieves the values of up to 4 components or relationship pairs on
+	 * this entity.
 	 *
-	 * Missing _components_ or _pairs_ will return `undefined`.
+	 * Missing components or pairs will return `undefined`.
 	 *
 	 * # Example
 	 *
@@ -204,10 +221,10 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Returns `true` if this _id_ has all of the specified _components_ or
-	 * relationship _pairs_.
+	 * Returns `true` if this entity has _all_ of the specified components or
+	 * relationship pairs.
 	 *
-	 * A maximum of 4 _components_ or _pairs_ can be checked at once.
+	 * A maximum of 4 components or pairs can be checked at once.
 	 *
 	 * # Example
 	 *
@@ -230,7 +247,7 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Removes a _component_ or relationship _pair_ from this _id_.
+	 * Removes a component or relationship pair from this entity.
 	 */
 	remove(componentOrPair: ComponentHandle | Pair): this {
 		world.remove(this.id, componentOrPair.id)
@@ -239,8 +256,8 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Clears all _components_ and relationship _pairs_ from this _id_, but
-	 * does not delete the _id_.
+	 * Clears all components and relationship pairs from this entity, but
+	 * does not despawn the entity.
 	 */
 	clear(): this {
 		world.clear(this.id)
@@ -300,7 +317,7 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Gets the parent (the target of a `ChildOf` relationship) for this _id_, if such a relationship exists.
+	 * Gets the parent (the target of a `ChildOf` relationship) for this entity, if such a relationship exists.
 	 *
 	 * # Example
 	 *
@@ -317,7 +334,7 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Gets all children (the sources of `ChildOf` relationships) for this _id_.
+	 * Gets all children (the sources of `ChildOf` relationships) for this entity.
 	 *
 	 * # Example
 	 *
@@ -338,14 +355,14 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Returns `true` if this _id_ exists.
+	 * Returns `true` if this entity exists.
 	 */
 	exists(): boolean {
 		return world.contains(this.id)
 	}
 
 	/**
-	 * Returns the target _id_ of a relationship _pair_ from this _id_.
+	 * Returns the target entity of a relationship pair from this entity.
 	 *
 	 * If there are multiple targets for the given relationship, the `nth` index
 	 * can be specified (starting at 0).
@@ -372,7 +389,7 @@ export abstract class Handle {
 	}
 
 	/**
-	 * Returns all target _entities_ of a relationship _pair_ from this _id_.
+	 * Returns all target entities of a relationship pair from this entity.
 	 *
 	 * # Example
 	 *
@@ -431,7 +448,7 @@ export abstract class Handle {
 	// }
 
 	/**
-	 * Completely removes this _id_ from the world.
+	 * Completely deletes this entity from the world.
 	 */
 	despawn(): void {
 		world.delete(this.id)
@@ -448,7 +465,7 @@ export class EntityHandle extends Handle {
 }
 
 /**
- * Spawns a new, empty _entity_ and returns it.
+ * Spawns a new, empty entity and returns it.
  *
  * Additionally, a `label` can be provided for easier identification during debugging.
  */
@@ -474,7 +491,7 @@ export class ComponentHandle<Value = unknown> extends Handle {
 }
 
 /**
- * Creates a new _component_.
+ * Creates a new component.
  *
  * Additionally, a `label` can be provided for easier identification during debugging.
  *
@@ -509,20 +526,20 @@ export class ResourceHandle<Value = unknown> extends Handle {
 	declare [VALUE_SYMBOL]: Value
 
 	/**
-	 * Returns the current value of this _resource_.
+	 * Returns the current value of this resource.
 	 *
 	 * Not to be confused with `get`, which can be used to retrieve the value of
-	 * _components_ attached to _resources_, just like with _entities_.
+	 * components attached to resources, just like with entities.
 	 */
 	read(): Value {
 		return this.get(this) as Value
 	}
 
 	/**
-	 * Updates the value of the _resource_.
+	 * Updates the value of the resource.
 	 *
 	 * Not to be confused with `set`, which can be used to set the value of
-	 * _components_ attached to _resources_, just like with _entities_.
+	 * components attached to resources, just like with entities.
 	 */
 	write(value: Value): this {
 		this.set(this, value)
@@ -530,7 +547,7 @@ export class ResourceHandle<Value = unknown> extends Handle {
 	}
 
 	/**
-	 * Registers a listener that is called whenever the value of this _resource_ changes.
+	 * Registers a listener that is called whenever the value of this resource changes.
 	 *
 	 * The returned function can be called to unregister the listener.
 	 */
@@ -542,9 +559,9 @@ export class ResourceHandle<Value = unknown> extends Handle {
 }
 
 /**
- * Creates a new _resource_ with the given initial `value`.
+ * Creates a new resource with the given initial `value`.
  *
- * Resources exist independently of _entities_ (and cannot be attached to them).
+ * Resources exist independently of entities (and cannot be attached to them).
  * They are useful to represent global state, such as game state, settings and so on.
  *
  * Additionally, a `label` can be provided for easier identification during debugging.
@@ -599,7 +616,7 @@ export const External = new ComponentHandle<undefined>(world.component())
 export const Label = new ComponentHandle<string>(world.component())
 
 /**
- * Built-in component used to distinguish entities that are also components.
+ * Built-in component used to distinguish entities that represent components.
  */
 export const Component = new ComponentHandle<undefined>(world.component())
 
@@ -627,7 +644,6 @@ export const Wildcard = new ComponentHandle<unknown>(JecsWildcard)
 
 // TODO! Consider making a standard system that removes previous ChildOf
 // ! relationships when setting a new one.
-// See `Wildcard`.
 /**
  * Built-in component used to represent parent-child relationships between entities.
  *
@@ -666,16 +682,16 @@ ChildOf.set(Label, 'ChildOf')
 ChildOf.set(Internal)
 
 // -----------------------------------------------------------------------------
-// Standards
+// Other Standards
 // -----------------------------------------------------------------------------
 
 /**
- * Built-in component used to distinguish entities that are also resources.
+ * Built-in component used to distinguish entities that represent resources.
  */
 export const Resource = component('Resource')
 
 /**
- * Built-in component used to represent systems.
+ * Built-in component used to distinguish entities that represent systems.
  */
 export const System = component<{
 	callback: (...args: defined[]) => void
@@ -686,7 +702,7 @@ export const System = component<{
 }>('System')
 
 /**
- * Built-in component used to represent plugins.
+ * Built-in component used to distinguish entities that represent plugins.
  */
 export const Plugin = component<{
 	build: PluginBuildFn<defined[]>
