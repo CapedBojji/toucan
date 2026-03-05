@@ -4,54 +4,63 @@
 
 # Toucan
 
-**Toucan** is an opinionated [Entity Component System](https://github.com/SanderMertens/ecs-faq) framework for Roblox-TS that wraps [Jecs](https://github.com/Ukendio/jecs) and [Planck](https://github.com/YetAnotherClown/planck), favoring developer experience over raw performance.
+![Version](https://img.shields.io/badge/status-alpha-orange)
 
-It was created as a way to remove the need of glueing together different ECS libraries and allowing the developer to start working on their actual game as soon as possible.
+**Toucan** is an opinionated [Entity Component System](https://github.com/SanderMertens/ecs-faq) framework for Roblox-TS based on [Jecs](https://github.com/Ukendio/jecs) and [Planck](https://github.com/YetAnotherClown/planck), favoring developer experience over raw performance.
+
+It was created as a way to remove the need to glue together different ECS libraries and allowing the developer to start working on their actual game as soon as possible.
 
 ## Features
 
-- **Fluent API:** abstracts away the concept of an ECS world in favor of a more concise way of manipulating entities, queries and other things[^1];
+- **Fluent API:** entity handles provide chainable methods that abstract away the process of imperatively manipulating entities;
 
-- **Hooks:** provides built-in topologically aware functions, such as `useDeltaTime` and `useThrottledMemo`;
+- **Advanced Queries:** query entities whose component just changed, filter it, map it to something useful, you name it;
 
 - **Plugins:** enables better organization of components and systems by grouping them together, which in turn also allows for third-party plugins that are easy to integrate;
 
-- **Phases:** inherited from Planck, systems are assigned to predefined phases[^2] in order to resolve dependencies between them;
+- **Phases:** systems are assigned to predefined phases in order to resolve dependencies between them with less coupling;
 
-- **Everything is an entity:** components, resources, systems and plugins are also entities, allowing you to assign them metadata and inspect them.
+- **Hooks:** built-in topologically aware functions, such as `useDeltaTime` and `useThrottledMemo`;
 
-[^1]: This does come with the cost of a relatively lower performance (~20-40% less than Jecs; actual benchmarks will be done and documented when things get more stable).
-
-[^2]: Having predefined phases is what allows for third-party plugins that are easy to integrate.
+- **Everything is an Entity:** components, resources, systems and plugins are also entities, allowing you to assign them metadata and inspect them.
 
 ## Example
 
 ```ts
-import { component, entity, pair, query, scheduler, Scheduler, UPDATE, Wildcard } from '@rbxts/toucan'
+import { component, entity, pair, query, scheduler, Scheduler, STARTUP, UPDATE, Wildcard } from '@rbxts/toucan'
 
+const Age = component<number>()
 const Likes = component()
 
-const bob = entity('Bob')
-const charlie = entity('Charlie')
-const alice = entity('Alice')
-	.set(pair(Likes, bob))
-	.set(pair(Likes, charlie))
+function spawnPeople() {
+	const bob = entity('Bob').set(Age, 22)
+	const charlie = entity('Charlie').set(Age, 42)
 
-function greetInterests(greeting: string) {
-	query(pair(Likes, Wildcard)).forEach((subject) => {
+	entity('Alice')
+		.set(Age, 25)
+		.set(pair(Likes, bob))
+		.set(pair(Likes, charlie))
+}
+
+const greetInterests = query(Age)
+	.with(pair(Likes, Wildcard))
+	.bind((subject, age) => {
 		subject.targetsOf(Likes).forEach((interest) => {
-			print(greeting.format(interest.label(), subject.label()))
+			print(`Hey ${interest}, nice to meet you! I'm ${subject} and my age is ${age}.`)
 		})
 	})
+
+function greetingPlugin(scheduler: Scheduler) {
+	scheduler.useSystem(spawnPeople, STARTUP).useSystem(greetInterests, UPDATE)
 }
 
-function greetingPlugin(scheduler: Scheduler, greeting: string) {
-	scheduler.useSystem(greetInterests, UPDATE, greeting)
-}
+scheduler().usePlugin(greetingPlugin).run()
+```
 
-scheduler()
-	.usePlugin(greetingPlugin, "Hey %s, nice to meet you! I'm %s.")
-	.run()
+## Installation
+
+```bash
+npm install @rbxts/toucan
 ```
 
 # Testing Workflow
