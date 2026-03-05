@@ -157,7 +157,8 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	 *
 	 * # Cons
 	 *
-	 * - If a label is desired, requires it being manually given in `Scheduler.useSystem()`.
+	 * - Cannot be passed optional arguments by `Scheduler.useSystem()`.
+	 * - Cannot easily infer a label from function name, requiring it to be manually given by `Scheduler.useSystem()`.
 	 *
 	 * # Example
 	 *
