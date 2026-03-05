@@ -7,7 +7,7 @@ import * as jecs from '@rbxts/jecs'
 
 export type QueryResult<Cs extends (ComponentHandle | Pair)[]> = [Handle, ...InferValues<Cs>]
 
-type Disconnect = () => void
+type DisconnectFn = () => void
 
 export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	private readonly requiredIds: RawId[]
@@ -211,7 +211,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	onAdded<C extends ComponentHandle>(
 		component: C,
 		callback: (entity: Handle, ...componentValues: InferValues<[...Cs, C]>) => void,
-	): Disconnect {
+	): DisconnectFn {
 		return world.added(component.id, (id, _, value) => {
 			const e = resolveId(id)
 			if (!e) return
@@ -242,7 +242,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	onChanged<C extends ComponentHandle>(
 		component: C,
 		callback: (entity: Handle, ...componentValues: InferValues<[...Cs, C, C]>) => void,
-	): Disconnect {
+	): DisconnectFn {
 		return world.changed(component.id, (id, _, value) => {
 			const e = resolveId(id)
 			if (!e) return
@@ -280,7 +280,7 @@ export class Query<Cs extends (ComponentHandle | Pair)[]> {
 	onRemoved<C extends ComponentHandle>(
 		component: C,
 		callback: (entity: Handle, ...componentValues: [...InferValues<Cs>, InferValue<C>, boolean]) => void,
-	): Disconnect {
+	): DisconnectFn {
 		return world.removed(component.id, (id, _, despawned) => {
 			const e = resolveId(id)
 			if (!e) return
