@@ -1,5 +1,5 @@
 <h1>
-  <img src="assets/toucan_readme.png" width="100" style="vertical-align: bottom;"/>Toucan
+  Toucan<img src="assets/toucan_readme.png" width="100" style="vertical-align: bottom;"/>
 </h1>
 
 ![Version](https://img.shields.io/badge/status-alpha-orange) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
