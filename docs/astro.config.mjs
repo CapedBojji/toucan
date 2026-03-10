@@ -22,6 +22,9 @@ export default defineConfig({
           skipErrorChecking: true,
           typeDoc: {
             router: 'group',
+            name: 'Toucan API',
+            excludeExternals: true,
+            exclude: ['**/node_modules/**'],
           },
         }),
       ],
