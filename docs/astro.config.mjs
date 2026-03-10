@@ -23,6 +23,7 @@ export default defineConfig({
           skipErrorChecking: true,
           typeDoc: {
             router: 'group',
+            gitRevision: 'master',
           },
         }),
       ],

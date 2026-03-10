@@ -7,7 +7,7 @@ title: "resource"
 
 > **resource**\<`Value`\>(`value`, `label?`): [`ResourceHandle`](/toucan/api/core_ecs/resourcehandle/)\<`Value`\>
 
-Defined in: [src/handle.ts:601](https://github.com/OverlineJunior/toucan/blob/5e77424d22b6c9bab6a75574fb64d27ef5785ee2/src/handle.ts#L601)
+Defined in: [src/handle.ts:601](https://github.com/OverlineJunior/toucan/blob/master/src/handle.ts#L601)
 
 Creates a new resource with the given initial `value`.
 

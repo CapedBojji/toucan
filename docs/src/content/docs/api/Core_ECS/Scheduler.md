@@ -5,7 +5,7 @@ prev: false
 title: "Scheduler"
 ---
 
-Defined in: [src/scheduler.ts:167](https://github.com/OverlineJunior/toucan/blob/5e77424d22b6c9bab6a75574fb64d27ef5785ee2/src/scheduler.ts#L167)
+Defined in: [src/scheduler.ts:167](https://github.com/OverlineJunior/toucan/blob/master/src/scheduler.ts#L167)
 
 The starting point of a game made with Toucan.
 
@@ -15,7 +15,7 @@ The starting point of a game made with Toucan.
 
 > **run**(): `this`
 
-Defined in: [src/scheduler.ts:230](https://github.com/OverlineJunior/toucan/blob/5e77424d22b6c9bab6a75574fb64d27ef5785ee2/src/scheduler.ts#L230)
+Defined in: [src/scheduler.ts:230](https://github.com/OverlineJunior/toucan/blob/master/src/scheduler.ts#L230)
 
 Synchronously builds all initially registered plugins (user-defined first),
 and then bootstraps the engine to run all systems on their respective phases.
@@ -34,7 +34,7 @@ which only fires once during this method call).
 
 > **usePlugin**\<`Args`\>(`plugin`, ...`args`): `this`
 
-Defined in: [src/scheduler.ts:217](https://github.com/OverlineJunior/toucan/blob/5e77424d22b6c9bab6a75574fb64d27ef5785ee2/src/scheduler.ts#L217)
+Defined in: [src/scheduler.ts:217](https://github.com/OverlineJunior/toucan/blob/master/src/scheduler.ts#L217)
 
 Schedules a plugin to be built, passing it the scheduler itself and the
 provided arguments.
@@ -87,7 +87,7 @@ scheduler()
 
 > **useSystem**\<`Args`\>(`system`, `phase`, `args?`, `label?`): `this`
 
-Defined in: [src/scheduler.ts:187](https://github.com/OverlineJunior/toucan/blob/5e77424d22b6c9bab6a75574fb64d27ef5785ee2/src/scheduler.ts#L187)
+Defined in: [src/scheduler.ts:187](https://github.com/OverlineJunior/toucan/blob/master/src/scheduler.ts#L187)
 
 Schedules a system to run in the specified phase with the provided arguments.
 
