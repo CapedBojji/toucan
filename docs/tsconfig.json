@@ -2,12 +2,17 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "noLib": false,
+    "lib": ["ESNext"],
+    "types": ["@rbxts/types"]
   },
-  "include":[
+  "include": [
     "../src/**/*"
   ],
-  "exclude":[
+  "exclude": [
     "../node_modules",
     "node_modules",
     "src",
