@@ -130,7 +130,7 @@ export abstract class Handle {
 	/**
 	 * Assigns a tag component to this entity.
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const IsAlive = component()
 	 * myEntity.set(IsAlive)
@@ -140,7 +140,7 @@ export abstract class Handle {
 	/**
 	 * Assigns a component and its value to this entity.
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const Health = component<number>()
 	 * const Stamina = component<number>()
@@ -154,7 +154,7 @@ export abstract class Handle {
 	/**
 	 * Assigns a relationship pair to this entity.
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const Likes = component()
 	 *
@@ -167,7 +167,7 @@ export abstract class Handle {
 	/**
 	 * Assigns a relationship pair and its value to this entity.
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const Owns = component<number>()
 	 *
@@ -198,7 +198,7 @@ export abstract class Handle {
 	 *
 	 * Missing components or pairs will return `undefined`.
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const name = myEntity.get(Name)
 	 *
@@ -221,7 +221,7 @@ export abstract class Handle {
 	 *
 	 * A maximum of 4 components or pairs can be checked at once.
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const IsDead = component()
 	 * const Owns = component()
@@ -313,7 +313,7 @@ export abstract class Handle {
 	/**
 	 * Gets the parent (the target of a `ChildOf` relationship) for this entity, if such a relationship exists.
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const alice = entity()
 	 * const charlie = entity().set(pair(ChildOf, alice))
@@ -329,7 +329,7 @@ export abstract class Handle {
 	/**
 	 * Gets all children (the sources of `ChildOf` relationships) for this entity.
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const alice = entity()
 	 * const charlie = entity().set(pair(ChildOf, alice))
@@ -359,7 +359,7 @@ export abstract class Handle {
 	 * If there are multiple targets for the given relationship, the `nth` index
 	 * can be specified (starting at 0).
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const Likes = component()
 	 *
@@ -382,7 +382,7 @@ export abstract class Handle {
 	/**
 	 * Returns all target entities of a relationship pair from this entity.
 	 *
-	 * @example
+	 * @examplee
 	 * ```ts
 	 * const Likes = component()
 	 *
@@ -485,7 +485,7 @@ export class ComponentHandle<Value = unknown> extends Handle {
  *
  * Additionally, a `label` can be provided for easier identification during debugging.
  *
- * @exampl
+ * @example
  * ```ts
  * // A component with a value.
  * const Health = component<number>()
@@ -555,7 +555,7 @@ export class ResourceHandle<Value = unknown> extends Handle {
  *
  * Additionally, a `label` can be provided for easier identification during debugging.
  *
- * @exampl
+ * @example
  * ```ts
  * const GameState = resource('lobby')
  *
@@ -614,7 +614,7 @@ export const Component = new ComponentHandle<undefined>(world.component())
  * 1. To query for all entities, including variations, such as components, systems and so on;
  * 2. To query for all sources or targets of a relationship, without caring about the other end of the relationship.
  *
- * @exampl
+ * @example
  * ```ts
  * // 1. Query all simple entities (entities that are not also components, systems, resources or plugins):
  * query(Wildcard).withoutAny(Component, System, Resource, Plugin).forEach((id) => {
@@ -634,7 +634,7 @@ export const Wildcard = new ComponentHandle<unknown>(JecsWildcard)
 /**
  * Built-in component used to represent parent-child relationships between entities.
  *
- * @exampl
+ * @example
  * ```ts
  * const alice = entity()
  * const bob = entity().set(pair(ChildOf, alice))
