@@ -7,7 +7,7 @@ title: "POST_UPDATE"
 
 > `const` **POST\_UPDATE**: [`Phase`](/api/interfaces/phase/)
 
-Defined in: [src/std/phases.ts:75](https://github.com/OverlineJunior/toucan/blob/4cdfd0dfe43e8538887a71db35f0a7b92648a8e5/src/std/phases.ts#L75)
+Defined in: [src/std/phases.ts:75](https://github.com/OverlineJunior/toucan/blob/d9d8710f3d24167621f79a1bf7051c996358ce73/src/std/phases.ts#L75)
 
 Runs on `RunService.Heartbeat` in the following order (assuming no custom phases are added):
 

@@ -13,6 +13,8 @@ export default defineConfig({
       customCss: [
         './src/styles.css',
       ],
+      site: 'https://OverlineJunior.github.io',
+      base: 'toucan',
       plugins: [
         starlightTypeDoc({
           entryPoints:['../src/index.ts'],

@@ -7,7 +7,7 @@ title: "useHookState"
 
 > **useHookState**\<`S`\>(`initial`, `identifier?`, `cleanup?`): `S`
 
-Defined in: [src/topoRuntime.ts:77](https://github.com/OverlineJunior/toucan/blob/4cdfd0dfe43e8538887a71db35f0a7b92648a8e5/src/topoRuntime.ts#L77)
+Defined in: [src/topoRuntime.ts:77](https://github.com/OverlineJunior/toucan/blob/d9d8710f3d24167621f79a1bf7051c996358ce73/src/topoRuntime.ts#L77)
 
 **Don't use this function directly in your systems.**
 
