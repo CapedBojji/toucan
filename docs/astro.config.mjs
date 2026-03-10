@@ -5,6 +5,11 @@ import starlightTypeDoc from 'starlight-typedoc';
 export default defineConfig({
   site: 'https://OverlineJunior.github.io',
   base: '/toucan',
+  vite: {
+    ssr: {
+      noExternal: ['zod'],
+    },
+  },
   integrations: [
     starlight({
       title: 'Toucan',

@@ -7,7 +7,7 @@ title: "useThrottle"
 
 > **useThrottle**(`seconds`, `identifier?`): `boolean`
 
-Defined in: [std/hooks/useThrottle.ts:25](https://github.com/OverlineJunior/toucan/blob/d7a6e6d9807f9afe6ad990c7456c15691aa2daa2/src/std/hooks/useThrottle.ts#L25)
+Defined in: [std/hooks/useThrottle.ts:25](https://github.com/OverlineJunior/toucan/blob/62f1b2542b7786caa0f969ae53354577a38c701d/src/std/hooks/useThrottle.ts#L25)
 
 Throttles execution based on a time interval in seconds.
 

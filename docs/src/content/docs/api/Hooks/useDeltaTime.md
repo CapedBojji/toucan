@@ -7,7 +7,7 @@ title: "useDeltaTime"
 
 > **useDeltaTime**(): `number`
 
-Defined in: [std/hooks/useDeltaTime.ts:21](https://github.com/OverlineJunior/toucan/blob/d7a6e6d9807f9afe6ad990c7456c15691aa2daa2/src/std/hooks/useDeltaTime.ts#L21)
+Defined in: [std/hooks/useDeltaTime.ts:21](https://github.com/OverlineJunior/toucan/blob/62f1b2542b7786caa0f969ae53354577a38c701d/src/std/hooks/useDeltaTime.ts#L21)
 
 Returns the `os.clock()` time delta between the start of this and the last frame.
 
