@@ -2,8 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    # TODO! Update back to master once we're done.
-    branches: [ deployment ]
+    branches: [ master ]
   workflow_dispatch:
 
 permissions:
