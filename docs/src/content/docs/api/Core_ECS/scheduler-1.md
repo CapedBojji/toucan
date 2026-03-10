@@ -7,7 +7,7 @@ title: "scheduler"
 
 > **scheduler**(): [`Scheduler`](/api/core_ecs/scheduler/)
 
-Defined in: [src/scheduler.ts:322](https://github.com/OverlineJunior/toucan/blob/d9d8710f3d24167621f79a1bf7051c996358ce73/src/scheduler.ts#L322)
+Defined in: [src/scheduler.ts:322](https://github.com/OverlineJunior/toucan/blob/709434bcef3b0130ed797e45cdf39d37c0b15ce9/src/scheduler.ts#L322)
 
 Returns a new `Scheduler`, the starting point of a game made with Toucan.
 

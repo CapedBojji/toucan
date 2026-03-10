@@ -3,7 +3,9 @@ import starlight from '@astrojs/starlight';
 import starlightTypeDoc from 'starlight-typedoc';
 
 export default defineConfig({
-  integrations:[
+  site: 'https://OverlineJunior.github.io',
+  base: '/toucan',
+  integrations: [
     starlight({
       title: 'Toucan',
       logo: {
@@ -13,11 +15,9 @@ export default defineConfig({
       customCss: [
         './src/styles.css',
       ],
-      site: 'https://OverlineJunior.github.io',
-      base: 'toucan',
       plugins: [
         starlightTypeDoc({
-          entryPoints:['../src/index.ts'],
+          entryPoints: ['../src/index.ts'],
           tsconfig: './tsconfig.json',
           skipErrorChecking: true,
           typeDoc: {

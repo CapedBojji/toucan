@@ -7,7 +7,7 @@ title: "ChildOf"
 
 > `const` **ChildOf**: [`ComponentHandle`](/api/core_ecs/componenthandle/)\<`undefined`\>
 
-Defined in: [src/handle.ts:685](https://github.com/OverlineJunior/toucan/blob/d9d8710f3d24167621f79a1bf7051c996358ce73/src/handle.ts#L685)
+Defined in: [src/handle.ts:685](https://github.com/OverlineJunior/toucan/blob/709434bcef3b0130ed797e45cdf39d37c0b15ce9/src/handle.ts#L685)
 
 Built-in component used to represent parent-child relationships between entities.
 

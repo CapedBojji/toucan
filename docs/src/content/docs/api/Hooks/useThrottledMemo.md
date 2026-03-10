@@ -7,7 +7,7 @@ title: "useThrottledMemo"
 
 > **useThrottledMemo**\<`T`\>(`seconds`, `factory`, `initialValue`, `identifier?`): `T`
 
-Defined in: [src/std/hooks/useThrottledMemo.ts:24](https://github.com/OverlineJunior/toucan/blob/d9d8710f3d24167621f79a1bf7051c996358ce73/src/std/hooks/useThrottledMemo.ts#L24)
+Defined in: [src/std/hooks/useThrottledMemo.ts:24](https://github.com/OverlineJunior/toucan/blob/709434bcef3b0130ed797e45cdf39d37c0b15ce9/src/std/hooks/useThrottledMemo.ts#L24)
 
 Memoizes a value, updating it at most once every `seconds`.
 
