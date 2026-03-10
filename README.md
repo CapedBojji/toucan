@@ -2,11 +2,13 @@
   Toucan<img src="assets/toucan_readme.png" width="100" style="vertical-align: bottom;"/>
 </h1>
 
-![Version](https://img.shields.io/badge/status-alpha-orange) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Version](https://img.shields.io/badge/status-alpha-orange) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Documentation](https://img.shields.io/badge/docs-starlight-blueviolet)](https://overlinejunior.github.io/toucan/)
 
 **Toucan** is an opinionated [Entity Component System](https://github.com/SanderMertens/ecs-faq) framework for Roblox-TS based on [Jecs](https://github.com/Ukendio/jecs) and [Planck](https://github.com/YetAnotherClown/planck), favoring developer experience over raw performance.
 
 It was created as a way to remove the need to glue together different ECS libraries and allowing the developer to start working on their actual game as soon as possible.
+
+[Documentation](https://overlinejunior.github.io/toucan/)
 
 ## Features
 
