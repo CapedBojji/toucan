@@ -5,6 +5,7 @@
   "scripts": {
     "build": "rbxtsc",
     "watch": "yalc-watch",
+    "prepare": "npm run build",
     "prepublishOnly": "npm run build",
     "lint": "eslint ./src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -21,12 +22,12 @@
   "description": "Entity Component System framework for Roblox-TS that favors developer experience.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OverlineJunior/toucan.git"
+    "url": "git+https://github.com/CapedBojji/toucan.git"
   },
   "bugs": {
-    "url": "https://github.com/OverlineJunior/toucan/issues"
+    "url": "https://github.com/CapedBojji/toucan/issues"
   },
-  "homepage": "https://github.com/OverlineJunior/toucan#readme",
+  "homepage": "https://github.com/CapedBojji/toucan#readme",
   "sideEffects": false,
   "types": "out/index.d.ts",
   "files": [
