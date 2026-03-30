@@ -16,7 +16,11 @@ import { pair } from './pair'
 import { STANDARD_PLUGINS } from './std/plugins'
 
 export type System<Args extends defined[]> = (...args: Args) => void
-export type Plugin<Args extends defined[]> = (scheduler: Scheduler, ...args: Args) => void
+export type Plugin<Args extends defined[]> = (
+	scheduler: Scheduler,
+	planckScheduler: Planck.Scheduler<[]>,
+	...args: Args
+) => void
 
 function isInternal(): boolean {
 	const callerScriptPath = debug.info(2, 's')[0]
@@ -54,7 +58,7 @@ function validatePluginConflict(
 ) {
 	// If the plugin takes no extra arguments, there can't be a conflict.
 	const argCount = debug.info(build, 'a')[0]!
-	if (argCount === 1) return
+	if (argCount === 2) return
 
 	const existingParent = existing.parent()
 	const isIncomingExternal = incomingParent !== undefined && incomingParent.has(External)
@@ -205,7 +209,7 @@ export class Scheduler {
 	 * ```ts
 	 * function updatePhysics(gravity: number) { ... }
 	 *
-	 * function physicsPlugin(scheduler: Scheduler, gravity: number) {
+	 * function physicsPlugin(scheduler: Scheduler, planckScheduler: Planck.Scheduler, gravity: number) {
 	 *     scheduler.useSystem(updatePhysics, UPDATE, gravity)
 	 * }
 	 *
@@ -228,7 +232,7 @@ export class Scheduler {
 	 * which only fires once during this method call).
 	 */
 	run(): this {
-		const scheduler = new Planck.Scheduler()
+		const planckScheduler = new Planck.Scheduler()
 			.insert(STARTUP_PIPELINE)
 			.insert(UPDATE_PIPELINE, RunService, 'Heartbeat')
 			.insert(PRE_RENDER, RunService, 'PreRender')
@@ -236,7 +240,7 @@ export class Scheduler {
 			.insert(PRE_SIMULATION, RunService, 'PreSimulation')
 			.insert(POST_SIMULATION, RunService, 'PostSimulation')
 
-		function buildPlugins(scheduler: Scheduler) {
+		function buildPlugins(toucanScheduler: Scheduler) {
 			let pendingPlugins = query(Plugin).collect().filter(([, p]) => !p.built)
 
 			// We use a while loop to ensure that if a plugin registers another plugin,
@@ -250,7 +254,7 @@ export class Scheduler {
 					})
 					.forEach(([, p]) => {
 						p.built = true
-						p.build(scheduler, ...p.args)
+						p.build(toucanScheduler, planckScheduler, ...p.args)
 					})
 
 				pendingPlugins = query(Plugin).collect().filter(([, p]) => !p.built)
@@ -272,7 +276,7 @@ export class Scheduler {
 					}
 
 					system.scheduled = true
-					scheduler.addSystem(wrappedCallback, system.phase)
+					planckScheduler.addSystem(wrappedCallback, system.phase)
 				})
 		}
 
@@ -286,7 +290,7 @@ export class Scheduler {
 
 		scheduleSystems()
 
-		scheduler.runAll()
+		planckScheduler.runAll()
 
 		return this
 	}
